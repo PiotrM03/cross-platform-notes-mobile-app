@@ -1,0 +1,58 @@
+﻿<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
+             ios:Page.UseSafeArea="True"
+             xmlns:local="clr-namespace:NotesApp"
+             x:Class="NotesApp.MainPage"
+             x:Name="Page">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <local:TextConverter x:Key="TextTruncator"/>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <ScrollView>
+        <VerticalStackLayout Spacing="25" Padding="30">
+            <Button Text="Add Note" TextColor="{StaticResource ButtonText}" BackgroundColor="{StaticResource Button}" Clicked="OnAddNoteClicked"/>
+            <CollectionView x:Name="NotesCollection">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <SwipeView>
+                            <SwipeView.RightItems>
+                                <SwipeItems Mode="Reveal">
+                                    <SwipeItem Text="Delete" BackgroundColor="Red" 
+                                               Command="{Binding Source={x:Reference Page}, Path=DeleteNoteCommand}" 
+                                               CommandParameter="{Binding .}"/>
+                                </SwipeItems>
+                            </SwipeView.RightItems>
+                            <Frame BackgroundColor="{AppThemeBinding Dark={StaticResource FrameDark}, Light={StaticResource Frame}}" 
+                                   Padding="0" 
+                                   Margin="2" 
+                                   HasShadow="False">
+                                <StackLayout Padding="10" Orientation="Horizontal">
+                                    <StackLayout HorizontalOptions="FillAndExpand" BackgroundColor="Transparent">
+                                        <StackLayout.GestureRecognizers>
+                                            <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="OnEditNoteTapped"/>
+                                        </StackLayout.GestureRecognizers>
+                                        <Label Text="{Binding Title, Converter={StaticResource TextTruncator}, ConverterParameter=20}"
+                                               TextColor="{AppThemeBinding Dark={StaticResource Primary}, Light={StaticResource PrimaryDark}}"
+                                               FontAttributes="Bold" 
+                                               FontSize="Medium"/>
+                                        <Label Text="{Binding Content, Converter={StaticResource TextTruncator}, ConverterParameter=35}"
+                                               TextColor="{AppThemeBinding Dark={StaticResource Primary}, Light={StaticResource PrimaryDark}}"
+                                               FontAttributes="Italic" 
+                                               FontSize="Small"/>
+                                        <Label Text="{Binding Location}"
+                                               TextColor="{AppThemeBinding Dark={StaticResource Primary}, Light={StaticResource PrimaryDark}}"
+                                               FontSize="10"/>
+                                    </StackLayout>
+                                </StackLayout>
+                            </Frame>
+                        </SwipeView>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
